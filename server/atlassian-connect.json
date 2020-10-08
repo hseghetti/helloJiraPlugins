@@ -1,7 +1,7 @@
 {
-    "key": "my-app",
-    "name": "My app",
-    "description": "My very first app",
+    "key": "block-poc",
+    "name": "Block POC 001",
+    "description": "This is the first POC version",
     "baseUrl": "{{localBaseUrl}}",
     "authentication": {
         "type": "jwt"
@@ -35,19 +35,19 @@
                 "conditions": [{
                     "condition": "user_is_logged_in"
                 }]
-            }
-        ],
-        "webPanels": [
+            },
             {
-              "key": "my-configuration-page",
-              "url": "configuration?id={board.id}&type={board.type}",
+              "key": "blockers-jira",
+              "location": "system.top.navigation.bar",
               "name": {
-                "value": "My Configuration Page"
+                  "value": "Blockers"
               },
-              "location": "jira.agile.board.configuration",
-              "weight": 1
-            }
-          ],
+              "url": "/blockers",
+              "conditions": [{
+                  "condition": "user_is_logged_in"
+              }]
+          }
+        ],
           "webItems": [
             {
               "location": "jira.issue.tools",

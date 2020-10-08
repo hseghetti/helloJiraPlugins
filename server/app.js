@@ -30,8 +30,7 @@ import nocache from 'nocache';
 import routes from './routes';
 import { addServerSideRendering } from './server-side-rendering';
 
-const fetch = require('node-fetch');
-
+import storage from './storage/storage';
 
 // Bootstrap Express and atlassian-connect-express
 const app = express();
@@ -97,66 +96,41 @@ app.get('/unblock/:projectId', addon.authenticate(), async function(req,res){
 
   const domain = req.query['xdm_e'];
   const issueKey = req.query['issueKey'];
-  const token = req.query['jwt'];
-  var httpClient = addon.httpClient(req);
-  console.log(`${domain}/rest/api/2/issue/${issueKey}`);
+  const httpClient = addon.httpClient(req);
+
   await httpClient.get({
     url: `/rest/api/2/issue/${issueKey}`,
-    headers: {
-      'X-Atlassian-Token': 'nocheck'
-    }
   },
   function(err, httpResponse, body) {
     if (err) {
       return console.error('Upload failed:', err);
     }
-    console.log('httpResponse')
-    console.log(httpResponse)
-    console.log('body')
     console.log(body)
-    res.send(body);
-  });
-  // await fetch(`/rest/api/2/issue/${issueKey}`, {
-  //   method: 'GET',
-  //   headers: {
-  //     // 'Authorization': `Bearer ${token}`,
-  //     // 'Accept': 'application/json'
-  //     'X-Atlassian-Token': 'nocheck'
-  //   }
-  // })
-  //   .then(response => {
-  //     console.log(
-  //       `Response: ${response.status} ${response.statusText}`
-  //     );
-  //     return response.text();
-  //   })
-  //   .then(text => res.send(console.log(text)))
-  //   .catch(err => console.error(err));
+    storage.updateData(domain, issueKey, JSON.parse(body).fields.status.name, 'UNBLOCK');
 
-  // res.send('projectId : '+ req.params['projectId'] + '- issueKey :' + req.query['issueKey'] );
+    res.status(204).send();
+  });
 });
 
-app.get('/block/:projectId', async function(req,res) {
-  console.log(req.query)
+app.get('/block/:projectId', addon.authenticate(), async function(req,res) {
+  console.log('--- Block ---');
 
-  fetch('https://your-domain.atlassian.com/rest/api/2/issue/{issueIdOrKey}', {
-    method: 'GET',
-    headers: {
-      'Authorization': `Basic ${Buffer.from(
-        'email@example.com:<api_token>'
-      ).toString('base64')}`,
-      'Accept': 'application/json'
+  const domain = req.query['xdm_e'];
+  const issueKey = req.query['issueKey'];
+  const httpClient = addon.httpClient(req);
+
+  await httpClient.get({
+    url: `/rest/api/2/issue/${issueKey}`,
+  },
+  function(err, httpResponse, body) {
+    if (err) {
+      return console.error('Upload failed:', err);
     }
-  })
-    .then(response => {
-      console.log(
-        `Response: ${response.status} ${response.statusText}`
-      );
-      return response.text();
-    })
-    .then(text => console.log(text))
-    .catch(err => console.error(err));
-  res.send('projectId : '+ req.params['projectId'] + '- issueKey :' + req.query['issueKey'] );
+    console.log(body)
+    storage.updateData(domain, issueKey, JSON.parse(body).fields.status.name, 'BLOCK');
+
+    res.status(204).send();
+  });
 });
 
 // Boot the HTTP server

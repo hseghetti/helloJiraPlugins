@@ -1,3 +1,6 @@
+const fs = require('fs');
+const data = JSON.parse(fs.readFileSync(__dirname + '/../storage/data.json'));
+
 export default function routes(app, addon) {
     // Redirect root path to /atlassian-connect.json,
     // which will be served by atlassian-connect-express.
@@ -11,7 +14,7 @@ export default function routes(app, addon) {
         // Rendering a template is easy; the render method takes two params: the name of the component or template file, and its props.
         // Handlebars and jsx are both supported, but please note that jsx changes require `npm run watch-jsx` in order to be picked up by the server.
         res.render(
-          'hello-world.hbs', // change this to 'hello-world.jsx' to use the Atlaskit & React version
+          'hello-world.jsx', // change this to 'hello-world.jsx' to use the Atlaskit & React version
           {
             title: 'Atlassian Connect'
             //, issueId: req.query['issueId']
@@ -20,8 +23,8 @@ export default function routes(app, addon) {
         );
     });
 
-    app.get('/configuration', function(req,res){
-      res.render("configuration", {id : req.query['id'], type : req.query['type'] });
+    app.get('/blockers', addon.authenticate(), function(req,res){
+      res.render("blockers.jsx", {data});
     });
 
     // Add additional route handlers here...

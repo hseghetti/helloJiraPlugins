@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@atlaskit/button": "^15.0.0",
+    "@atlaskit/code": "^13.0.2",
     "@atlaskit/section-message": "^5.0.6",
     "atlassian-connect-express": "^6.0.0",
     "body-parser": "^1.19.0",
