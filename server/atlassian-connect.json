@@ -1,0 +1,104 @@
+{
+    "key": "my-app",
+    "name": "My app",
+    "description": "My very first app",
+    "baseUrl": "{{localBaseUrl}}",
+    "authentication": {
+        "type": "jwt"
+    },
+    "lifecycle": {
+        "installed": "/installed"
+    },
+    "scopes": [
+        "READ"
+    ],
+    "modules": {
+        "generalPages": [
+            {
+                "key": "hello-world-page-jira",
+                "location": "system.top.navigation.bar",
+                "name": {
+                    "value": "Hello World"
+                },
+                "url": "/hello-world",
+                "conditions": [{
+                    "condition": "user_is_logged_in"
+                }]
+            },
+            {
+                "key": "hello-world-page-confluence",
+                "location": "system.header/left",
+                "name": {
+                    "value": "Hello World"
+                },
+                "url": "/hello-world",
+                "conditions": [{
+                    "condition": "user_is_logged_in"
+                }]
+            }
+        ],
+        "webPanels": [
+            {
+              "key": "my-configuration-page",
+              "url": "configuration?id={board.id}&type={board.type}",
+              "name": {
+                "value": "My Configuration Page"
+              },
+              "location": "jira.agile.board.configuration",
+              "weight": 1
+            }
+          ],
+          "webItems": [
+            {
+              "location": "jira.issue.tools",
+              "weight": 200,
+              "styleClasses": [
+                "webitem",
+                "system-present-webitem"
+              ],
+              "url": "/block/{project.id}?issueKey={issue.key}",
+              "context": "addon",
+              "target": {
+                "type": "page"
+              },
+              "tooltip": {
+                "value": "Blocking!"
+              },
+              "icon": {
+                "width": 16,
+                "height": 16,
+                "url": "/maps/icon.png"
+              },
+              "name": {
+                "value": "Block"
+              },
+              "key": "web-item-block"
+            },
+            {
+                "location": "jira.issue.tools",
+                "weight": 200,
+                "styleClasses": [
+                  "webitem",
+                  "system-present-webitem"
+                ],
+                "url": "/unblock/{project.id}?issueKey={issue.key}",
+                "context": "addon",
+                "target": {
+                  "type": "page"
+                },
+                "tooltip": {
+                  "value": "This is going to unblock"
+                },
+                "icon": {
+                  "width": 16,
+                  "height": 16,
+                  "url": "/maps/icon.png"
+                },
+                "name": {
+                  "value": "Unblock"
+                },
+                "key": "web-item-unblock"
+              }
+          ]
+    }
+}
